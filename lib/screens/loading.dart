@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/constants.dart';
 import 'package:flutter_blog/models/api_response.dart';
@@ -15,8 +13,6 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  late BuildContext context;
-
   // cek user
   void _loadUserInfo() async {
     String token = await getToken();
