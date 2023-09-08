@@ -4,6 +4,7 @@ import 'package:flutter_blog/constants.dart';
 import 'package:flutter_blog/models/api_response.dart';
 import 'package:flutter_blog/models/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 // fungsi login
 Future<ApiResponse> login(String email, String password) async {
@@ -99,4 +100,16 @@ Future<ApiResponse> getUserDetail() async {
     apiResponse.error = serverError;
   }
   return apiResponse;
+}
+
+// get token
+Future<String> getToken() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getString('token') ?? '';
+}
+
+// get user id
+Future<int> getUserId() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getInt('userId') ?? 0;
 }
