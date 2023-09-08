@@ -72,3 +72,31 @@ Future<ApiResponse> register(String name, String email, String password) async {
 
   return apiResponse;
 }
+
+// fungsi get user
+Future<ApiResponse> getUserDetail() async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+
+    final response = await http.get(Uri.parse(userUrl), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = User.fromJson(jsonDecode(response.body));
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
