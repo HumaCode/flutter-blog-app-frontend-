@@ -148,3 +148,32 @@ Future<ApiResponse> deletePost(int postId) async {
 
   return apiResponse;
 }
+
+// fungsi like/unlike
+Future<ApiResponse> likeUnlikePost(int postId) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response =
+        await http.post(Uri.parse('$postsUrl/$postId/likes'), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
