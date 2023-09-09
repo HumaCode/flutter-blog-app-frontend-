@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:flutter_blog/models/api_response.dart';
+import 'package:flutter_blog/screens/auth/login.dart';
+import 'package:flutter_blog/services/post_services.dart';
+import 'package:flutter_blog/services/user_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/constants.dart';
@@ -25,6 +29,33 @@ class _PostFormState extends State<PostForm> {
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  // fungsi create post
+  void postCreate() async {
+    String? image = imageFile == null ? null : getStringImage(imageFile);
+
+    ApiResponse response = await createPost(textBodyController.text, image);
+
+    if (response.error == null) {
+      Navigator.of(context).pop();
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Login()),
+                (route) => false),
+          });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$response.error'),
+          dismissDirection: DismissDirection.up,
+        ),
+      );
+      setState(() {
+        loading = !loading;
       });
     }
   }
@@ -96,6 +127,7 @@ class _PostFormState extends State<PostForm> {
                       setState(() {
                         loading = !loading;
                       });
+                      postCreate();
                     }
                   }),
                 ),
