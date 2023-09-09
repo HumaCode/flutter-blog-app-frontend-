@@ -9,54 +9,70 @@ class PostForm extends StatefulWidget {
 }
 
 class _PostFormState extends State<PostForm> {
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  TextEditingController textBodyController = TextEditingController();
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Post'),
       ),
-      body: ListView(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: Center(
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.image,
-                  size: 50,
-                  color: Colors.black38,
-                ),
-              ),
-            ),
-          ),
-          Form(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: TextFormField(
-                keyboardType: TextInputType.multiline,
-                maxLines: 9,
-                validator: (val) =>
-                    val!.isEmpty ? 'Post body is required' : null,
-                decoration: const InputDecoration(
-                  hintText: 'Post Body...',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      width: 1,
-                      color: Colors.black,
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.image,
+                        size: 50,
+                        color: Colors.black38,
+                      ),
                     ),
                   ),
                 ),
-              ),
+                Form(
+                  key: formkey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: TextFormField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 9,
+                      validator: (val) =>
+                          val!.isEmpty ? 'Post body is required' : null,
+                      controller: textBodyController,
+                      decoration: const InputDecoration(
+                        hintText: 'Post Body...',
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: kTextButton('POST', () {
+                    if (formkey.currentState!.validate()) {
+                      setState(() {
+                        loading = !loading;
+                      });
+                    }
+                  }),
+                ),
+              ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: kTextButton('POST', () {}),
-          ),
-        ],
-      ),
     );
   }
 }
