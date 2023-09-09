@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/constants.dart';
 
@@ -13,6 +15,20 @@ class _PostFormState extends State<PostForm> {
   TextEditingController textBodyController = TextEditingController();
   bool loading = false;
 
+  File? imageFile;
+  final picker = ImagePicker();
+
+  // fungsi image picker
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,12 +41,24 @@ class _PostFormState extends State<PostForm> {
             )
           : ListView(
               children: [
-                SizedBox(
+                Container(
                   width: MediaQuery.of(context).size.width,
                   height: 200,
+                  decoration: BoxDecoration(
+                    image: imageFile == null
+                        ? null
+                        : DecorationImage(
+                            image: FileImage(
+                              imageFile ?? File(''),
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                  ),
                   child: Center(
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        getImage();
+                      },
                       icon: const Icon(
                         Icons.image,
                         size: 50,
