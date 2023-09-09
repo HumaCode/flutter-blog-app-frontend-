@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/screens/auth/login.dart';
+import 'package:flutter_blog/screens/post/post_screen.dart';
+import 'package:flutter_blog/screens/profile.dart';
 import 'package:flutter_blog/services/user_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,6 +32,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      body: currentIndex == 0 ? const PostScreen() : const ProfilePage(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: const Icon(Icons.add),
