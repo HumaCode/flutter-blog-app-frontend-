@@ -38,7 +38,9 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const PostForm(),
+              builder: (context) => const PostForm(
+                title: 'Add New Post',
+              ),
             ),
           );
         },

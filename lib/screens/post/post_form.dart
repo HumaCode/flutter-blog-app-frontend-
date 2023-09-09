@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_blog/models/api_response.dart';
+import 'package:flutter_blog/models/post.dart';
 import 'package:flutter_blog/screens/auth/login.dart';
 import 'package:flutter_blog/services/post_services.dart';
 import 'package:flutter_blog/services/user_service.dart';
@@ -8,7 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog/constants.dart';
 
 class PostForm extends StatefulWidget {
-  const PostForm({super.key});
+  const PostForm({super.key, this.post, this.title});
+
+  final Post? post;
+  final String? title;
 
   @override
   State<PostForm> createState() => _PostFormState();
@@ -64,7 +68,7 @@ class _PostFormState extends State<PostForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Post'),
+        title: Text('${widget.title}'),
       ),
       body: loading
           ? const Center(
@@ -76,14 +80,21 @@ class _PostFormState extends State<PostForm> {
                   width: MediaQuery.of(context).size.width,
                   height: 200,
                   decoration: BoxDecoration(
-                    image: imageFile == null
-                        ? null
-                        : DecorationImage(
+                    image: (imageFile != null)
+                        ? DecorationImage(
                             image: FileImage(
-                              imageFile ?? File(''),
+                              imageFile!,
                             ),
                             fit: BoxFit.cover,
-                          ),
+                          )
+                        : (widget.post != null && widget.post!.image != null)
+                            ? DecorationImage(
+                                image: NetworkImage(
+                                  widget.post!.image!,
+                                ),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
                   ),
                   child: Center(
                     child: IconButton(

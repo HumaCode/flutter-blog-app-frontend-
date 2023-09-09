@@ -3,6 +3,7 @@ import 'package:flutter_blog/constants.dart';
 import 'package:flutter_blog/models/api_response.dart';
 import 'package:flutter_blog/models/post.dart';
 import 'package:flutter_blog/screens/auth/login.dart';
+import 'package:flutter_blog/screens/post/post_form.dart';
 import 'package:flutter_blog/services/post_services.dart';
 import 'package:flutter_blog/services/user_service.dart';
 
@@ -161,7 +162,14 @@ class _PostScreenState extends State<PostScreen> {
                                     onSelected: (val) => {
                                       if (val == 'edit')
                                         {
-                                          // edit
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => PostForm(
+                                                title: 'Edit Post',
+                                                post: post,
+                                              ),
+                                            ),
+                                          ),
                                         }
                                       else
                                         {
