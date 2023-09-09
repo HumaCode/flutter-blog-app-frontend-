@@ -64,6 +64,27 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
+// post delete
+  void handleDeletePost(int postId) async {
+    ApiResponse response = await deletePost(postId);
+
+    if (response.error == null) {
+      retrievePosts();
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Login()),
+                (route) => false)
+          });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${response.error}'),
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     retrievePosts();
@@ -144,7 +165,7 @@ class _PostScreenState extends State<PostScreen> {
                                         }
                                       else
                                         {
-                                          // delete
+                                          handleDeletePost(post.id!),
                                         }
                                     },
                                     child: const Padding(
