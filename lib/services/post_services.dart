@@ -79,3 +79,40 @@ Future<ApiResponse> createPost(String body, String? image) async {
 
   return apiResponse;
 }
+
+// fungsi edit
+Future<ApiResponse> editPost(int postId, String body) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response = await http.put(
+      Uri.parse('$postsUrl/$postId'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: {
+        'body': body,
+      },
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['messege'];
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['messege'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
