@@ -5,7 +5,6 @@ import 'package:flutter_blog/models/post.dart';
 import 'package:flutter_blog/screens/auth/login.dart';
 import 'package:flutter_blog/services/post_services.dart';
 import 'package:flutter_blog/services/user_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -29,6 +28,27 @@ class _PostScreenState extends State<PostScreen> {
         postList = response.data as List<dynamic>;
         loading = loading ? !loading : loading;
       });
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Login()),
+                (route) => false)
+          });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${response.error}'),
+        ),
+      );
+    }
+  }
+
+  // post like dislike
+  void handlePostLikeDislike(int postId) async {
+    ApiResponse response = await likeUnlikePost(postId);
+
+    if (response.error == null) {
+      retrievePosts();
     } else if (response.error == unauthorized) {
       logout().then((value) => {
             Navigator.of(context).pushAndRemoveUntil(
@@ -163,7 +183,9 @@ class _PostScreenState extends State<PostScreen> {
                               post.selfLiked == true
                                   ? Colors.red
                                   : Colors.black38,
-                              () {},
+                              () {
+                                handlePostLikeDislike(post.id!);
+                              },
                             ),
                             Container(
                               height: 25,
