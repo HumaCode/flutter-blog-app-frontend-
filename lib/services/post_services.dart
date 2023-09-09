@@ -116,3 +116,35 @@ Future<ApiResponse> editPost(int postId, String body) async {
 
   return apiResponse;
 }
+
+// fungsi delete
+Future<ApiResponse> deletePost(int postId) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response =
+        await http.delete(Uri.parse('$postsUrl/$postId'), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['messege'];
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['messege'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
