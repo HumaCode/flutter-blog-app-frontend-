@@ -19,7 +19,7 @@ Future<ApiResponse> getPost() async {
 
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)['post']
+        apiResponse.data = jsonDecode(response.body)['posts']
             .map((p) => Post.fromJson(p))
             .toList();
         apiResponse.data as List<dynamic>;
