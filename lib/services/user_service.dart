@@ -40,7 +40,8 @@ Future<ApiResponse> login(String email, String password) async {
 }
 
 // fungsi register
-Future<ApiResponse> register(String name, String email, String password) async {
+Future<ApiResponse> register(String name, String email, String password,
+    String passwordConfirmation) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
@@ -50,7 +51,7 @@ Future<ApiResponse> register(String name, String email, String password) async {
       'name': name,
       'email': email,
       'password': password,
-      'password_confirmation': password,
+      'password_confirmation': passwordConfirmation,
     });
 
     switch (response.statusCode) {
