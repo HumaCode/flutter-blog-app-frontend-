@@ -1,3 +1,4 @@
+import 'package:d_info/d_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/constants.dart';
 import 'package:flutter_blog/models/api_response.dart';
@@ -71,6 +72,7 @@ class _PostScreenState extends State<PostScreen> {
 
     if (response.error == null) {
       retrievePosts();
+      DInfo.toastSuccess('${response.data}');
     } else if (response.error == unauthorized) {
       logout().then((value) => {
             Navigator.of(context).pushAndRemoveUntil(

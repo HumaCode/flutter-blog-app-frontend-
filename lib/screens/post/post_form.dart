@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:d_info/d_info.dart';
 import 'package:flutter_blog/models/api_response.dart';
 import 'package:flutter_blog/models/post.dart';
 import 'package:flutter_blog/screens/auth/login.dart';
@@ -44,6 +46,8 @@ class _PostFormState extends State<PostForm> {
     ApiResponse response = await createPost(textBodyController.text, image);
 
     if (response.error == null) {
+      DInfo.toastSuccess('${response.data}');
+
       Navigator.of(context).pop();
     } else if (response.error == unauthorized) {
       logout().then((value) => {
@@ -52,16 +56,45 @@ class _PostFormState extends State<PostForm> {
                 (route) => false),
           });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$response.error'),
-          dismissDirection: DismissDirection.up,
-        ),
-      );
+      DInfo.toastError('${response.error}');
+
       setState(() {
         loading = !loading;
       });
     }
+  }
+
+  // fungsi edit post
+  void postEdit(int postId) async {
+    String? image = imageFile == null ? null : getStringImage(imageFile);
+
+    ApiResponse response =
+        await editPost(postId, textBodyController.text, image);
+
+    if (response.error == null) {
+      DInfo.toastSuccess('${response.data}');
+      Navigator.of(context).pop();
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Login()),
+                (route) => false),
+          });
+    } else {
+      DInfo.toastError('${response.error}');
+      setState(() {
+        loading = !loading;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    if (widget.post != null) {
+      textBodyController.text = widget.post!.body!;
+    }
+
+    super.initState();
   }
 
   @override
@@ -138,7 +171,12 @@ class _PostFormState extends State<PostForm> {
                       setState(() {
                         loading = !loading;
                       });
-                      postCreate();
+
+                      if (widget.post == null) {
+                        postCreate();
+                      } else {
+                        postEdit(widget.post!.id!);
+                      }
                     }
                   }),
                 ),

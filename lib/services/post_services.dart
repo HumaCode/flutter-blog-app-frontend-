@@ -61,7 +61,7 @@ Future<ApiResponse> createPost(String body, String? image) async {
 
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body);
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -81,7 +81,7 @@ Future<ApiResponse> createPost(String body, String? image) async {
 }
 
 // fungsi edit
-Future<ApiResponse> editPost(int postId, String body) async {
+Future<ApiResponse> editPost(int postId, String body, String? image) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
@@ -92,9 +92,14 @@ Future<ApiResponse> editPost(int postId, String body) async {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       },
-      body: {
-        'body': body,
-      },
+      body: image != null
+          ? {
+              'body': body,
+              'image': image,
+            }
+          : {
+              'body': body,
+            },
     );
 
     switch (response.statusCode) {

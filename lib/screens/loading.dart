@@ -1,3 +1,4 @@
+import 'package:d_info/d_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/constants.dart';
 import 'package:flutter_blog/models/api_response.dart';
@@ -33,11 +34,7 @@ class _LoadingState extends State<Loading> {
             MaterialPageRoute(builder: (context) => const Login()),
             (route) => false);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${response.error}'),
-          ),
-        );
+        DInfo.toastError('${response.error}');
       }
     }
   }
