@@ -99,10 +99,10 @@ Future<ApiResponse> editPost(int postId, String body) async {
 
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)['messege'];
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 403:
-        apiResponse.error = jsonDecode(response.body)['messege'];
+        apiResponse.error = jsonDecode(response.body)['message'];
         break;
       case 401:
         apiResponse.error = unauthorized;
@@ -131,10 +131,10 @@ Future<ApiResponse> deletePost(int postId) async {
 
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)['messege'];
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 403:
-        apiResponse.error = jsonDecode(response.body)['messege'];
+        apiResponse.error = jsonDecode(response.body)['message'];
         break;
       case 401:
         apiResponse.error = unauthorized;
