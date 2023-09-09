@@ -36,3 +36,46 @@ Future<ApiResponse> getPost() async {
 
   return apiResponse;
 }
+
+// fungsi create
+Future<ApiResponse> createPost(String body, String? image) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response = await http.post(
+      Uri.parse(postsUrl),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: image != null
+          ? {
+              'body': body,
+              'image': image,
+            }
+          : {
+              'body': body,
+            },
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 422:
+        final errors = jsonDecode(response.body)['errors'];
+        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
