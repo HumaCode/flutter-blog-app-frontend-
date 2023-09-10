@@ -1,16 +1,14 @@
-# flutter_blog
+# Login Page
+![login](https://github.com/HumaCode/flutter-blog-app-frontend-/assets/75249155/24fe8665-9b28-4dc9-ae96-c8a43ef88282)
 
-A new Flutter project.
+# add post
+![add post](https://github.com/HumaCode/flutter-blog-app-frontend-/assets/75249155/b31e8805-5dcc-4d8a-9264-c5fa267fd465)
 
-## Getting Started
+# edit post
+![edit post](https://github.com/HumaCode/flutter-blog-app-frontend-/assets/75249155/999f535b-86a8-44f0-9f5a-6187e5a88e49)
 
-This project is a starting point for a Flutter application.
+# profile user
+![profile user](https://github.com/HumaCode/flutter-blog-app-frontend-/assets/75249155/f9cdc878-d00d-4466-873e-bf5d6eaf155c)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+backend laravel 10 = https://github.com/HumaCode/api-blog-laravel-10-backend-
