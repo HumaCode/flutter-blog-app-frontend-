@@ -20,6 +20,7 @@ class _CommentScreenState extends State<CommentScreen> {
   List<dynamic> commentList = [];
   bool loading = true;
   int userId = 0;
+  int editCommentId = 0;
   TextEditingController txtCommentController = TextEditingController();
 
   // getComment
@@ -74,6 +75,30 @@ class _CommentScreenState extends State<CommentScreen> {
     ApiResponse response = await deleteComments(commentId);
 
     if (response.error == null) {
+      DInfo.toastSuccess('${response.data}');
+      commentGet();
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Login()),
+                (route) => false),
+          });
+    } else {
+      setState(() {
+        loading = !loading;
+      });
+      DInfo.toastError('${response.error}');
+    }
+  }
+
+  // edit comment
+  void commentEdit() async {
+    ApiResponse response =
+        await editComments(editCommentId, txtCommentController.text);
+
+    if (response.error == null) {
+      editCommentId = 0;
+      txtCommentController.clear();
       DInfo.toastSuccess('${response.data}');
       commentGet();
     } else if (response.error == unauthorized) {
@@ -178,14 +203,12 @@ class _CommentScreenState extends State<CommentScreen> {
                                           onSelected: (val) => {
                                             if (val == 'edit')
                                               {
-                                                // Navigator.of(context).push(
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) => PostForm(
-                                                //       title: 'Edit Post',
-                                                //       post: post,
-                                                //     ),
-                                                //   ),
-                                                // ),
+                                                setState(() {
+                                                  editCommentId =
+                                                      comment.id ?? 0;
+                                                  txtCommentController.text =
+                                                      comment.comment ?? '';
+                                                }),
                                               }
                                             else
                                               {
@@ -238,8 +261,11 @@ class _CommentScreenState extends State<CommentScreen> {
                             setState(() {
                               loading = true;
                             });
-
-                            commentCreate();
+                            if (editCommentId > 0) {
+                              commentEdit();
+                            } else {
+                              commentCreate();
+                            }
                           }
                         },
                       ),
