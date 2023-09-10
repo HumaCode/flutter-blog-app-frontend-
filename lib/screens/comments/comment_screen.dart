@@ -46,12 +46,34 @@ class _CommentScreenState extends State<CommentScreen> {
     }
   }
 
+// create comment
   void commentCreate() async {
     ApiResponse response =
         await createComments(widget.postId!, txtCommentController.text);
 
     if (response.error == null) {
       txtCommentController.clear();
+      DInfo.toastSuccess('${response.data}');
+      commentGet();
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Login()),
+                (route) => false),
+          });
+    } else {
+      setState(() {
+        loading = !loading;
+      });
+      DInfo.toastError('${response.error}');
+    }
+  }
+
+  // delete comment
+  void commentDelete(int commentId) async {
+    ApiResponse response = await deleteComments(commentId);
+
+    if (response.error == null) {
       DInfo.toastSuccess('${response.data}');
       commentGet();
     } else if (response.error == unauthorized) {
@@ -166,7 +188,9 @@ class _CommentScreenState extends State<CommentScreen> {
                                                 // ),
                                               }
                                             else
-                                              {}
+                                              {
+                                                commentDelete(comment.id!),
+                                              }
                                           },
                                           child: const Padding(
                                             padding: EdgeInsets.only(right: 10),

@@ -85,7 +85,7 @@ Future<ApiResponse> deleteComments(int commentId) async {
   try {
     String token = await getToken();
     final response =
-        await http.delete(Uri.parse('commentsUrl/$commentId'), headers: {
+        await http.delete(Uri.parse('$commentsUrl/$commentId'), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
