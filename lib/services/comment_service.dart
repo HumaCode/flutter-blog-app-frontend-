@@ -13,7 +13,7 @@ Future<ApiResponse> getComments(int postId) async {
   try {
     String token = await getToken();
     final response = await http.get(
-      Uri.parse('postsUrl/$postId/comments'),
+      Uri.parse('$postsUrl/$postId/comments'),
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -38,6 +38,7 @@ Future<ApiResponse> getComments(int postId) async {
     }
   } catch (e) {
     apiResponse.error = serverError;
+    print(e.toString());
   }
 
   return apiResponse;
@@ -50,7 +51,7 @@ Future<ApiResponse> createComments(int postId, String comment) async {
   try {
     String token = await getToken();
     final response =
-        await http.post(Uri.parse('postsUrl/$postId/comments'), headers: {
+        await http.post(Uri.parse('$postsUrl/$postId/comments'), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     }, body: {
